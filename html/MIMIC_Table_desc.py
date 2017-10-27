@@ -42,8 +42,6 @@ for index in range(0, len(Tables)):
             info[item].insert(0, Tables[index][0])
         TableDesc.append(info)
         NewTables.append(Tables[index][0])
-        print Tables[index][0]
-
 
 def Send_Email(Subject, Content):
     import smtplib
@@ -57,7 +55,6 @@ def Send_Email(Subject, Content):
 
 To_File = {}
 for table in TableDesc:
-    print table[0][0].upper()
     temp = """"""
     temp += "<div id='{0}' class='tab-pane fade' style='overflow:auto;height:80%;'>".format(table[0][0].upper())
     temp += """<ul class='nav nav-tabs'>
@@ -88,6 +85,7 @@ for table in TableDesc:
 
 for item in To_File.keys():
     # if md5(open(Path + DB + '/' + item + '_table_desc.html','r').read()).hexdigest() != md5(To_File[item]).hexdigest():
+    print "Writing table preview: " + item
     File = open(Path + DB + '/' + item + '_table_desc.html', 'w')
     File.write(To_File[item])
     File.close()
@@ -95,8 +93,3 @@ for item in To_File.keys():
         File2 = open('ERROR.txt','a')
         File2.write("Table changed in QueryBuilder\n", "The table {0}, with filename {1}_table_desc.html has been updated.\n There was a error sending the email".format(item, item))
         File2.close()
-
-
-
-
-

@@ -141,7 +141,7 @@ def DocIndex(Error):
                 <div class="col-sm-8">
                   <h1 id="Query-Builder-Issue-Tracker" style="text-align:center;">Issue Tracker</h1>
                   <p >If you are experiencing issues when using Query Builder or if you have a suggestion for improvement, please raise an issue on our issue tracker.</p>
-                  <p >To raise an issue, first navigate to the Query Builder Repository on GitHub or click <a href='https://github.com/MIT-LCP/querybuilder-issue'>here</a>. After logging in to GitHub, click “New issue”, add a title and description of the problem, and then select the “Submit new issue” button.</p>
+                  <p >To raise an issue, first navigate to the Query Builder Repository on GitHub or click <a href='https://github.com/MIT-LCP/QueryBuilder-AWS'>here</a>. After logging in to GitHub, click “New issue”, add a title and description of the problem, and then select the “Submit new issue” button.</p>
                 </div>
                 <div class="col-sm-2"></div>
               </div><hr>
