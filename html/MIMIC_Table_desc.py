@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 ################################################################################
 # Felipe Torres Fabregas 
-# Last modified: October 27, 2017
+# Last modified: October 30, 2017
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 # This is the file is used to create all the table preview information.
 # The main variables are DB and path. 'DB' will have to be updated with the 
@@ -43,20 +43,10 @@ for index in range(0, len(Tables)):
         TableDesc.append(info)
         NewTables.append(Tables[index][0])
 
-def Send_Email(Subject, Content):
-    import smtplib
-    server  = smtplib.SMTP("localhost")
-    TO      = ["admin@querybuilder-lcp.mit.edu"]
-    FROM    = "AWS@querybuilder-lcp.mit.edu"
-    # server.set_debuglevel(1)
-    server.sendmail(FROM, TO, """Subject: %s\n\n%s""" % (Subject, Content))
-    server.quit()
-    return True
-
 To_File = {}
 for table in TableDesc:
     temp = """"""
-    temp += "<div id='{0}' class='tab-pane fade' style='overflow:auto;height:80%;'>".format(table[0][0].upper())
+    temp += "<div id='{0}' class='tab-pane fade' style='overflow:auto;height:80%".format(table[0][0].upper())
     temp += """<ul class='nav nav-tabs'>
       <li class='active'><a data-toggle='tab' href='#{0}1'>Description</a></li>
       <li><a data-toggle='tab' href='#{1}2'>Preview (100) rows</a></li>
@@ -84,12 +74,10 @@ for table in TableDesc:
     To_File[table[0][0]] = temp
 
 for item in To_File.keys():
-    # if md5(open(Path + DB + '/' + item + '_table_desc.html','r').read()).hexdigest() != md5(To_File[item]).hexdigest():
     print "Writing table preview: " + item
     File = open(Path + DB + '/' + item + '_table_desc.html', 'w')
     File.write(To_File[item])
     File.close()
-    if not Send_Email("Table changed in QueryBuilder", "The table {0}, with filename {1}_table_desc.html has been updated.".format(item, item)):
-        File2 = open('ERROR.txt','a')
-        File2.write("Table changed in QueryBuilder\n", "The table {0}, with filename {1}_table_desc.html has been updated.\n There was a error sending the email".format(item, item))
-        File2.close()
+    File2 = open('ERROR.txt','a')
+    File2.write("Table changed in QueryBuilder\n", "The table {0}, with filename {1}_table_desc.html has been updated.\n There was a error sending the email".format(item, item))
+    File2.close()
