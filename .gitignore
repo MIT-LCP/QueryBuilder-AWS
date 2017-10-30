@@ -88,6 +88,8 @@ ENV/
 # Rope project settings
 .ropeproject
 
-config.pyc
 initial_testing.pyc
 *.pyc
+config.py
+config.pyc
+Python_QB/config.py

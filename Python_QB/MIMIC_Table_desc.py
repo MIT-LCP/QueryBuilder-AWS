@@ -10,7 +10,7 @@
 # should remain the samin, depending on the apache condiguration of the server
 ################################################################################
 from datetime import datetime, timedelta
-from sys import path, exit, stderr
+from sys import path, exit, stderr, argv
 from Cookie import SimpleCookie
 from cgi import FieldStorage
 from hashlib import sha256, md5
@@ -22,7 +22,15 @@ path.insert(0, '../Python_QB/')
 from initial_testing import * # Here we insert all the functions crated for the user and queries
 
 ###
-DB = 'mimiciii'
+if len(argv) < 2:
+    print "No schema added. Using default 'mimiciii'"
+    DB = 'mimiciii'
+    # exit(0)
+elif len(argv) > 2:
+    print "Too many arguments, please just use only one database schema."
+    exit(0)
+else:
+    DB = argv[1]
 Path = '/var/www/Tables/'
 ###
 
@@ -78,6 +86,6 @@ for item in To_File.keys():
     File = open(Path + DB + '/' + item + '_table_desc.html', 'w')
     File.write(To_File[item])
     File.close()
-    File2 = open('ERROR.txt','a')
-    File2.write("Table changed in QueryBuilder\n", "The table {0}, with filename {1}_table_desc.html has been updated.\n There was a error sending the email".format(item, item))
+    File2 = open('Modifications.txt','a')
+    File2.write("The table {0}, with filename {1}_table_desc.html has been updated.\n".format(item, item))
     File2.close()
