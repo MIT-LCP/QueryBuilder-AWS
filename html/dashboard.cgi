@@ -50,8 +50,8 @@ Query     = form.getvalue("Query", None) # We initialize the query variable as e
 data      = Database(c['DB'].value) # Here the database model is initialized 
 Tables    = data.GetTables(c['DB'].value) # We call the function to get all the tables
 Schema    = data.SetSchema(c['DB'].value) # We call the function to set the schema and without the minute limit
-NewTables = [] # This will be the list of table names in the left side bar
 email     = c['Email'].value # Here we get the email from the cookie
+NewTables = [] # This will be the list of table names in the left side bar
 # End of variable definition
 Path = '/var/www/Tables/' + c['DB'].value + '/'
 
@@ -110,7 +110,7 @@ def DocDashboard(Schema, NewTables, email, Query, Path):
 
 ##Here we START the description of the table ##
     for table in NewTables: 
-      File = open('../Tables_QB/'+table+'_table_desc.html','r')
+      File = open(Path+table+'_table_desc.html','r')
       print File.read()
       File.close()##Here we END the description of the table ##
 
