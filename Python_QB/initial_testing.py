@@ -165,7 +165,7 @@ class Database():
 
     def SetSchema(self, Schema):
         from urllib import urlopen
-        url = "https://querybuilder-lcp.mit.edu/TESTING/json"
+        url = "https://querybuilder-lcp.mit.edu/json"
         response = urlopen(url)
         data = response.read().split('\n')
         for item in data:
