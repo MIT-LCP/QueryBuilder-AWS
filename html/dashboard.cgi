@@ -45,33 +45,25 @@ else:
   exit(0)
 
 # Here we define the variables
-Query     = "" # We initialize the query variable as empty just in case there is no query.
+form      = FieldStorage() #If there is a form, store all the variables in form
+Query     = form.getvalue("Query", None) # We initialize the query variable as empty just in case there is no query.
 data      = Database(c['DB'].value) # Here the database model is initialized 
 Tables    = data.GetTables(c['DB'].value) # We call the function to get all the tables
 Schema    = data.SetSchema(c['DB'].value) # We call the function to set the schema and without the minute limit
-TableDesc = [] # This will be the table 100 row preview and description
 NewTables = [] # This will be the list of table names in the left side bar
 email     = c['Email'].value # Here we get the email from the cookie
 # End of variable definition
 Path = '/var/www/Tables/' + c['DB'].value + '/'
 
 # Here we get the table information, description and preview
-for index in range(0, len(Tables)):
-  if not Tables[index][0][:12] == "chartevents_": # If the table is not part of the chartevents, get the information.
-    info = data.DescTables(Tables[index][0]) # Here the basic table information is searched.
-    for item in range(0, len(info)):
-      info[item] = list(info[item])
-      info[item].insert(0, Tables[index][0])
-    TableDesc.append(info)
-    NewTables.append(Tables[index][0])
+for indx, item in enumerate(Tables):
+  if not item[0][:12] == "chartevents_": 
+    NewTables.append(item[0])
 
-form = FieldStorage() #If there is a form, store all the variables in form
 if form.getvalue("Query"):
-  Query   = form.getvalue("Query")
-  valid   = UserModel() # Here we create the user model to get the user information
-  valid.InsertQRow(email, Query)
+  UserModel().InsertQRow(email, Query)
 
-def DocDashboard(Schema, TableDesc, NewTables, email, Query, Path):
+def DocDashboard(Schema, NewTables, email, Query, Path):
     NumberOfRows = 100
     print """<html lang="en"><head>""", Header, JS, """</head><body><div id="wrapper">
     <nav class="navbar navbar-default" style="margin-bottom: 0">
@@ -117,11 +109,10 @@ def DocDashboard(Schema, TableDesc, NewTables, email, Query, Path):
         <div class="tab-content" id="TAB_Content">""" % TabManager
 
 ##Here we START the description of the table ##
-    for table in TableDesc: 
-      File = open(Path + table[0][0] + '_table_desc.html','r')
+    for table in NewTables: 
+      File = open('../Tables_QB/'+table+'_table_desc.html','r')
       print File.read()
-      File.close()
-##Here we END the description of the table ##
+      File.close()##Here we END the description of the table ##
 
     #END of print for the tables
     print """  <!-- ############################################ QUERY TAB ######################################## -->
@@ -133,19 +124,20 @@ def DocDashboard(Schema, TableDesc, NewTables, email, Query, Path):
                <button type="submit" class="btn btn-success">Execute Query</button>
                <span id="whoing"></span>
                 <a id="Export" class="btn btn-success pull-right"  download="Result.csv">Export Results</a>
-               </form>"""
+               </form>
+               <div id='result-content'>"""
     if Query:
       POST = """<form action="dashboard.cgi" method="POST">
                <textarea class="form-control" id="Query" name="Query" rows="10" placeholder="Query">%s</textarea><br>
                <button type="submit" class="btn btn-success">Execute Query</button>
                <span id="whoing"></span>
                 <a id="Export" class="btn btn-success pull-right"  download="Result.csv">Export Results</a>
-               </form>""" % Query
-
-      Data = Database(c['DB'].value)
-      Data.SetSchema(c['DB'].value)
-
+               </form>
+               <div id='result-content'>""" % Query
+    
       try:
+        Data = Database(c['DB'].value)
+        Data.SetSchema(c['DB'].value)
         result, title, Error = Data.RandomQ(Query)
         stderr.write("No ERROR on query execution: %s\n" % Query)
       except Exception as e:
@@ -153,7 +145,7 @@ def DocDashboard(Schema, TableDesc, NewTables, email, Query, Path):
         result = Error = title = Query = ''
     else: 
       result = Error = Query = title = ''
-    print POST + "<div id='result-content'>"
+    print POST
     counter = 0
     if (Error == '' or Error == False) and title != '':
       head = "<thead><tr>"
@@ -243,7 +235,6 @@ Header = """
     <link rel='stylesheet' type='text/css' href="css/font-awesome.min.css">
 
     <script type="text/javascript" src="js/FileSaver.js"></script>
-
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/sb-admin-2.js"></script>
     <script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
@@ -271,4 +262,4 @@ $(document).ready(function(){
 });
 </script>""" % (c['DB'].value)
 
-DocDashboard(Schema, TableDesc, NewTables, email, Query, Path)
+DocDashboard(Schema, NewTables, email, Query, Path)

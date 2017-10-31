@@ -51,6 +51,7 @@ if form.getvalue("email", None) and form.getvalue("Password", None) and form.get
       print "Content-Type: text/html\n\r" # HTML is following
       print "<script> window.location.href = 'dashboard.cgi'</script>"
       stderr.write("No ERROR. The user logging in is: %s\n" % email)
+      exit(0)
     else:
       Error = "Error Creating the model"
       print "Content-Type: text/html\n\r" # HTML is following

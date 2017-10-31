@@ -6,11 +6,13 @@
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 # This file contains the user query history
 ###############################################################
+from datetime import datetime, timedelta
+from sys import path, exit, stderr
 from Cookie import SimpleCookie
 from cgi import FieldStorage
-from sys import path, exit
 from cgitb import enable
 from os import environ
+
 
 path.insert(0, '../Python_QB/')
 from initial_testing import *
@@ -19,12 +21,14 @@ enable(display=0, logdir="/var/www/html/tmp/")
 print "Content-Type: text/html\n\r" # HTML is following
 
 if environ.has_key('HTTP_COOKIE'):
-  Co = ""
-  for cookie in environ['HTTP_COOKIE'].split(';'):
-    if "SID" in cookie or "Email" in cookie or "DB" in cookie:
-      Co += cookie + ";"
   c=SimpleCookie()
-  c.load(Co)
+  c.load(environ['HTTP_COOKIE'])
+  if "SID" and "Email" and "DB" in c:
+    c['DB']['expires'] = c['Email']['expires'] = c['SID']['expires'] = datetime.utcnow() + timedelta(seconds=10800)
+  else:
+    print "<script>alert('Please login.');</script>"
+    print "<script language='javascript'>window.location.href = 'index.cgi'</script>"
+    exit(0)
 else:
   print "<script>alert('Please login.');</script>"
   print "<script language='javascript'>window.location.href = 'index.cgi'</script>"
