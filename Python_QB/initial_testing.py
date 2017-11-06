@@ -151,17 +151,37 @@ class Database():
         try:
             if "information_schema" in Query or "pg_" in Query:
                 return [["Bad Query"],], ("Bad Query",), False
-            self.cur.execute("%s" %Query)
-            listing = []
-            if self.cur.description != None:
-                for item in self.cur.description:
-                    listing.append(item[0])
-            Down = self.cur.fetchmany(5000)
-            Down.insert(0, listing)
-            return Down, listing, False
+            text_stream = StringIO()
+            copy_query = "COPY (" + Query + ") TO STDOUT WITH CSV HEADER DELIMITER ','"
+            self.cur.copy_expert(copy_query,text_stream)
+            tmp = 0
+            temp = u''
+            text_stream.seek(0)
+            while tmp < 5000:
+                try:
+                    temp += next(text_stream)
+                    tmp += 1
+                except:
+                    tmp = 5000
+            return temp, False
         except Error, e:
             http_logger.write("\t*** ERROR *** Error executing a random query to download.\nQuery: {0}\nError: {1}".format(Query, e))
-            return False, False, e
+            return False, e
+    # def RandomQDown(self, Query):
+    #     try:
+    #         if "information_schema" in Query or "pg_" in Query:
+    #             return [["Bad Query"],], ("Bad Query",), False
+    #         self.cur.execute("%s" %Query)
+    #         listing = []
+    #         if self.cur.description != None:
+    #             for item in self.cur.description:
+    #                 listing.append(item[0])
+    #         Down = self.cur.fetchmany(5000)
+    #         Down.insert(0, listing)
+    #         return Down, listing, False
+    #     except Error, e:
+    #         http_logger.write("\t*** ERROR *** Error executing a random query to download.\nQuery: {0}\nError: {1}".format(Query, e))
+    #         return False, False, e
 
     def SetSchema(self, Schema):
         from urllib import urlopen
