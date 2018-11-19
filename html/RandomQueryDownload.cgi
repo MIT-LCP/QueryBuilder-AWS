@@ -27,20 +27,9 @@ c.load(cookie_string)
 Data = Database(c['DB'].value)
 schema = Data.SetSchema(DB)
 if Query and schema != False: 
-	RESULT, title, Error = Data.RandomQDown(Query)
+	RESULT, Error = Data.RandomQDown(Query)
 	if Error == False: 
-		LINE = []
-		for item in RESULT:
-			line = []
-			for row in item:
-				try: 
-					row%1
-					line.append(row)
-				except:
-					line.append(str(row))
-			LINE.append(line)
-		for item in LINE:
-			print str(item)[1:-1]
+		print RESULT
 	else:
 		print "** ERROR **, There was an error with the Query."
 		print "If the erro persist contact the administrator.\n Please send a email to admin@querybuilder-lcp.mit.edu"

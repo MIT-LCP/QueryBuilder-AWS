@@ -9,10 +9,8 @@
 from datetime import datetime, timedelta
 from sys import path, exit, stderr
 from Cookie import SimpleCookie
-from cgi import FieldStorage
 from cgitb import enable
 from os import environ
-
 
 path.insert(0, '../Python_QB/')
 from initial_testing import *
@@ -34,9 +32,7 @@ else:
   print "<script language='javascript'>window.location.href = 'index.cgi'</script>"
   exit(0)
 try:
-  SModel = SessionModel()
-  data = c['SID'].value
-  if not (SModel.GetSession(int(data))):
+  if not (SessionModel().GetSession(int(c['SID'].value))):
     print "<script>alert('There was an error with the session'));});</script>"
     print "<script language='javascript'>window.location.href = 'index.cgi'</script>"
     exit(0)
