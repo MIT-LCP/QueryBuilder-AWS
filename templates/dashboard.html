@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block local_css_js %}
+
+<!--   <link rel='stylesheet' type='text/css' href="css/bootstrap.min.css"> -->
+<!--   <link rel='stylesheet' type='text/css' href="css/font-awesome.min.css"> -->
+<!--   <script type="text/javascript" src="js/jquery.min.js"></script> -->
+<!--   <script type="text/javascript" src="js/jquery-2.0.3.min.js"></script> -->
+<!--   <script type="text/javascript" src="js/bootstrap.min.js"></script> -->
+<!--   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/metisMenu.min.css') }}" /> -->
+<!--   <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='css/sb-admin-2.css') }}"> -->
+<!--   <script type="text/javascript" src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script> -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/FileSaver.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootbox.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"> </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.twbsPagination.js') }}"></script>
+
+
+
+{% endblock %}
+
+{% block content %}
+
+{% if Error %} <script> alert('{{Error}}'); </script> {% endif %}
+
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="justify-content:space-between;">
+  <!-- Brand -->
+  <a class="navbar-brand" href="/dashboard">MIMIC-III Query Builder</a>
+  <ul class="navbar-nav">
+    <!-- Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle float-right" href="#" id="navbardrop" data-toggle="dropdown" > {{ User }} </a>
+      <div class="dropdown-menu">
+        <a id="home" href="dashboard" class="dropdown-item active"> Query Builder</a>
+        <a id="create-user" href="User" class="dropdown-item"> User Profile</a>
+        <a href="/logout" class="dropdown-item"> Logout</a>
+      </div>
+    </li>
+  </ul>
+</nav>
+<div class="container-fluid">
+
+<div class="row">
+  <div class="col-md-2 side_nav">
+    <ul class="nav nav-tabs" style='overflow:auto;height:95vh;'>
+    {% for table in Tables %}
+      <li class='nav-item full_row'><a href="#" onclick="Get_File('{{Files[loop.index0]}}', '{{ table }}');" class='nav-link list-group-item list-group-item-success'>{{ table }}</a></li> 
+    {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-10 tab-content"  id="page-content-wrapper">
+    <ul class="nav nav-tabs" role="tablist" id="TabManager">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" id='Query_tab' href="#q_home">Home</a>
+      </li>
+    </ul>
+    <div class="tab-pane active" id="q_home">
+      <form>
+        <textarea class="form-control" rows="10" id="query" name="query"></textarea>
+        <a class="btn btn-success pull-right list-group-item-success"  style="margin: 5px 0 5px 0;" id="Execute">Execute Query</a>
+        <a class="btn btn-success pull-right list-group-item-success" style="float:right; margin: 5px 0 5px 0;
+" download="Result.csv" id="Export">Export Results</a>
+      </form>
+        <center>
+          <img src="{{url_for('static', filename='media/loading.gif')}}" id='loading' style='display:none'>
+        </center>
+      <div id='result-content'></div>
+      <div id='result-content2'></div>
+      <div id='result-error'></div>
+
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block base_js %}
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/custom_dashboard.js') }}"> </script>
+
+{% endblock %}

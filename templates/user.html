@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}User query history{% endblock %}
+
+{% block content %}
+{% if Error %}
+<script> alert('{{Error}}'); </script>
+{% endif %}
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="justify-content:space-between;">
+  <!-- Brand -->
+  <a class="navbar-brand" href="/dashboard">MIMIC-III Query Builder</a>
+  <ul class="navbar-nav">
+    <!-- Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle float-right" href="#" id="navbardrop" data-toggle="dropdown" > {{ User }} </a>
+      <div class="dropdown-menu">
+        <a id="home" href="dashboard" class="dropdown-item"> Query Builder</a>
+        <a id="create-user" href="User" class="dropdown-item active"> User Profile</a>
+        <a href="/logout" class="dropdown-item"> Logout</a>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+<div id="container">
+  <div class="container-fluid box">
+    <br>
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-4">
+        <p class="text-muted" style="font-size:18px;">User information</p>
+        <ul class="list-group">
+          <li class="list-group-item" style="font-size:18px;">Email: {{session['Email']}} </li>
+        </ul>
+      </div>
+      <div class="col-sm-4"></div>
+      <div class="col-sm-2"></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+        <p class="text-muted" style="font-size:18px;">Last {{ Query_History | length }} queries</p>
+        <ul class="list-group">
+        {% for query in Query_History %}
+          <li class="list-group-item list-group-item-action" style="font-size:18px;">{{ query }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+      <div class="col-sm-2"></div>
+    </div> 
+  </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+

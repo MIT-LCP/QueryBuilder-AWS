@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h1 class="header" style="text-align:center;">Query Builder v1.2</h1>
+
+{% if Error %}
+<script> alert('{{Error}}'); </script>
+{% endif %}
+
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+    <p class='login_content'>Query Builder is a simple Postgres SQL client that allows you to do introductory searches 
+    to our public databases.</p>
+    <p class='login_content'>This interface also provides the 
+    ability for users to export the results of their queries for processing in their own statistical tools. </p><br>
+      <form action='index.cgi' method='post' class="form-horizontal">
+        <div class="form-group row">
+          <label for="email" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-10">
+            <input type="email" class="form-control" id="Email" name="Email" placeholder="Email">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="Password" class="col-sm-2 col-form-label">Password</label>
+          <div class="col-sm-10">
+            <input type="password" class="form-control" id="Password" name="Password" placeholder="Password">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="Database" class="col-sm-2 col-form-label">Database</label>
+          <div class="col-sm-10">
+            <select class="form-control" name="Database" id="Database">
+              <option value="mimiciii" selected="selected">MIMIC-III V1.4</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-3"></div>
+  </div>
+  <hr>
+  <div class="container-fluid" style="background-color:white;">
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+        <center><h1 id="Query-Builder-Issue-Tracker">Issue Tracker</h1></center>
+        <p class='login_content'>If you are experiencing issues when using Query Builder or if you have a suggestion for improvement, please raise an issue on our issue tracker.</p>
+        <p class='login_content'>To raise an issue, first navigate to the Query Builder Repository on GitHub or click <a href='https://github.com/MIT-LCP/querybuilder-issue'>here</a>. After logging in to GitHub, click “New issue”, add a title and description of the problem, and then select the “Submit new issue” button.</p>
+      </div>
+      <div class="col-sm-2"></div>
+    </div><hr>
+    <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-6">
+        <center><h1 id="mimic-iii-critical-care-database" >MIMIC-III Critical Care Database</h1></center>
+        <p class='login_content'>MIMIC-III (<strong>M</strong>edical <strong>I</strong>nformation <strong>M</strong>art for <strong>I</strong>ntensive <strong>C</strong>are III) is a large, freely-available database comprising deidentified health-related data associated with over forty thousand patients who stayed in critical care units of the Beth Israel Deaconess Medical Center between 2001 and 2012.</p>
+        <p class='login_content'>The database includes information such as demographics, vital sign measurements made at the bedside (~1 data point per hour), laboratory test results, procedures, medications, caregiver notes, imaging reports, and mortality (both in and out of hospital).</p>
+        <p class='login_content'>MIMIC supports a diverse range of analytic studies spanning epidemiology, clinical decision-rule improvement, and electronic tool development. It is notable for three factors:</p>
+        <ul>
+        <li>it is freely available to researchers worldwide</li>
+        <li >it encompasses a diverse and very large population of ICU patients</li>
+        <li >it contains high temporal resolution data including lab results, electronic documentation, and bedside monitor trends and waveforms.</li>
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <img src="{{ url_for('static', filename='media/mimic-III.png') }}" alt="Mimic Flow Chart" style="margin-top: 2cm;" class='image-full col-md-12' />
+      </div> <!-- style="height:250px;width:auto;margin-top: 2cm;" -->
+      <div class="col-sm-1"></div>
+    </div>
+  </div>
+
+{% endblock %}

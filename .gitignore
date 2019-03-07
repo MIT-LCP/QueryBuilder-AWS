@@ -91,6 +91,4 @@ ENV/
 initial_testing.pyc
 *.pyc
 config.py
-config.pyc
-Python_QB/config.py
-Tables/*
+templates/tables/*
