@@ -1,0 +1,223 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.6.12
+-- Dumped by pg_dump version 10.7
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: Builder; Type: SCHEMA; Schema: -; Owner: qbuilder
+--
+
+CREATE SCHEMA "Builder";
+
+
+ALTER SCHEMA "Builder" OWNER TO qbuilder;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: Old_Users; Type: TABLE; Schema: Builder; Owner: mimicuser
+--
+
+CREATE TABLE "Builder"."Old_Users" (
+    "ID" integer,
+    "Name" character varying(60),
+    "Last" character varying(30),
+    "Email" character varying(50),
+    "Username" character varying(50),
+    "Date" timestamp without time zone,
+    "LastLogin" date,
+    "Works" character varying(50),
+    "Admin" smallint,
+    "Organization" text,
+    "Department" text,
+    "City" text,
+    "State" text,
+    "Country" text,
+    "URL" text,
+    "Pic" text,
+    "Cert" text,
+    "Institution" text,
+    "Date_Approved" text,
+    "General_Research_Area" text
+);
+
+
+ALTER TABLE "Builder"."Old_Users" OWNER TO mimicuser;
+
+--
+-- Name: Queries; Type: TABLE; Schema: Builder; Owner: qbuilder
+--
+
+CREATE TABLE "Builder"."Queries" (
+    "ID" integer NOT NULL,
+    "UID" bigint,
+    "Query" character varying(2044) NOT NULL,
+    "Date" timestamp without time zone DEFAULT now(),
+    email text
+);
+
+
+ALTER TABLE "Builder"."Queries" OWNER TO qbuilder;
+
+--
+-- Name: Queries_ID_seq; Type: SEQUENCE; Schema: Builder; Owner: qbuilder
+--
+
+CREATE SEQUENCE "Builder"."Queries_ID_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "Builder"."Queries_ID_seq" OWNER TO qbuilder;
+
+--
+-- Name: Queries_ID_seq; Type: SEQUENCE OWNED BY; Schema: Builder; Owner: qbuilder
+--
+
+ALTER SEQUENCE "Builder"."Queries_ID_seq" OWNED BY "Builder"."Queries"."ID";
+
+
+--
+-- Name: Sessions; Type: TABLE; Schema: Builder; Owner: qbuilder
+--
+
+CREATE TABLE "Builder"."Sessions" (
+    "UID" integer,
+    "SID" bigint NOT NULL,
+    "Date" timestamp without time zone DEFAULT now(),
+    email text
+);
+
+
+ALTER TABLE "Builder"."Sessions" OWNER TO qbuilder;
+
+--
+-- Name: Users; Type: TABLE; Schema: Builder; Owner: qbuilder
+--
+
+CREATE TABLE "Builder"."Users" (
+    "ID" integer NOT NULL,
+    "Name" character varying(60) NOT NULL,
+    "Last" character varying(30),
+    "Email" character varying(50) NOT NULL,
+    "Username" character varying(50),
+    "Date" timestamp without time zone DEFAULT now(),
+    "LastLogin" date,
+    "Works" character varying(50),
+    "Admin" smallint,
+    "Organization" text,
+    "Department" text,
+    "City" text,
+    "State" text,
+    "Country" text,
+    "URL" text,
+    "Pic" text,
+    "Cert" text,
+    "Institution" text,
+    "Date_Approved" text,
+    "General_Research_Area" text
+);
+
+
+ALTER TABLE "Builder"."Users" OWNER TO qbuilder;
+
+--
+-- Name: Users_ID_seq; Type: SEQUENCE; Schema: Builder; Owner: qbuilder
+--
+
+CREATE SEQUENCE "Builder"."Users_ID_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "Builder"."Users_ID_seq" OWNER TO qbuilder;
+
+--
+-- Name: Users_ID_seq; Type: SEQUENCE OWNED BY; Schema: Builder; Owner: qbuilder
+--
+
+ALTER SEQUENCE "Builder"."Users_ID_seq" OWNED BY "Builder"."Users"."ID";
+
+
+--
+-- Name: Queries ID; Type: DEFAULT; Schema: Builder; Owner: qbuilder
+--
+
+ALTER TABLE ONLY "Builder"."Queries" ALTER COLUMN "ID" SET DEFAULT nextval('"Builder"."Queries_ID_seq"'::regclass);
+
+
+--
+-- Name: Users ID; Type: DEFAULT; Schema: Builder; Owner: qbuilder
+--
+
+ALTER TABLE ONLY "Builder"."Users" ALTER COLUMN "ID" SET DEFAULT nextval('"Builder"."Users_ID_seq"'::regclass);
+
+
+--
+-- Name: Users Users_pkey; Type: CONSTRAINT; Schema: Builder; Owner: qbuilder
+--
+
+ALTER TABLE ONLY "Builder"."Users"
+    ADD CONSTRAINT "Users_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Queries unique_ID; Type: CONSTRAINT; Schema: Builder; Owner: qbuilder
+--
+
+ALTER TABLE ONLY "Builder"."Queries"
+    ADD CONSTRAINT "unique_ID" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Sessions unique_SID; Type: CONSTRAINT; Schema: Builder; Owner: qbuilder
+--
+
+ALTER TABLE ONLY "Builder"."Sessions"
+    ADD CONSTRAINT "unique_SID" UNIQUE ("SID");
+
+
+--
+-- Name: SCHEMA "Builder"; Type: ACL; Schema: -; Owner: qbuilder
+--
+
+GRANT ALL ON SCHEMA "Builder" TO mimicuser;
+
+
+--
+-- PostgreSQL database dump complete
+--
