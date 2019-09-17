@@ -1,30 +1,34 @@
 #!/var/www/vhosts/querybuilder-lcp.mit.edu/python_env/bin/python3
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, redirect, session, request, jsonify, Response, current_app
 from datetime import datetime, timedelta
-import urllib.request
+from urllib.request import HTTPBasicAuthHandler, build_opener
+from urllib.error import HTTPError
 from re import search
+
+from flask import Flask, render_template, redirect, session, request, jsonify, Response, current_app
+
 from Postgres import *
 
 app = Flask(__name__)
 app.debug = True
 
-# FOLDER = '/var/www/vhosts/querybuilder-lcp.mit.edu/Flask'
 
-
+from urllib.error import HTTPError
+from  urllib.request import HTTPBasicAuthHandler, build_opener
 def Auth(User, Pass):
     """
     This authentication works for the current 2008-2019 physionet authentication
     version. It will NOT work for the NEW version of physionet that is being developed.
     """
-    url='https://physionet.org/works/MIMICIIIClinicalDatabase/files/'
-    auth_handler = urllib.request.HTTPBasicAuthHandler()
+    url='https://archive.physionet.org/works/MIMICIIIClinicalDatabase/files/'
+    auth_handler = HTTPBasicAuthHandler()
     auth_handler.add_password(realm='PhysioNetWorks', uri=url, user=User, passwd=Pass)
-    opener = urllib.request.build_opener(auth_handler)
+    opener = build_opener(auth_handler)
     try:
-        return opener.open(url).getcode()
-    except:
-        return 400
+        r = opener.open(url)
+        return r.getcode()
+    except HTTPError as e:
+        return e.getcode()
 
 @app.route("/",           methods=['POST','GET'])
 @app.route("/index.html", methods=['POST','GET'])
@@ -35,7 +39,7 @@ def Auth(User, Pass):
 @app.route("/login",      methods=['POST','GET'])
 def login():
     if request.method == 'POST':
-        Email = request.form.get('Email', None)
+        Email = request.form.get('Email', None).lower()
         app.logger.info('{0}: {1} is trying to log into querybuilder.'.format(datetime.now(), Email))
         if Email != None and request.form.get('Password', None) != None:
             Code = Auth(Email, request.form.get('Password', None))
@@ -121,7 +125,7 @@ def random_query():
     Data = Database()
     Data.SetSchema('mimiciii')
     result, title, Error = Data.RandomQ(Query)
-
+    
     if Error:
         app.logger.error('{0}: There was an error in the query:\n{1}\n'.format(datetime.now(), Error))
         QError = """<div class="card text-dark" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1;">
@@ -219,6 +223,6 @@ app.secret_key = 'mf}7WwDxTmpULrYgSWzfxutj|zDo1n(h+abvEa&$aM)?O$8R>qUtE)?CyOQ)*6
 
 if __name__ == "__main__":
     app.jinja_env.auto_reload = True
-    app.run(host='0.0.0.0', port=8083, threaded=True, debug=True)
+    app.run(host='192.168.11.160', port=8083, threaded=True, debug=True)
 
 

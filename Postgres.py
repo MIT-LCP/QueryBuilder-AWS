@@ -90,7 +90,7 @@ class Database():
         dbinfo = DBConfig()
 
         try:
-            self.con = connect("dbname={0} user={1} host=192.168.11.135 password={2} options='-c statement_timeout=15min'".format(
+            self.con = connect("dbname={0} user={1} host=192.168.11.130 password={2} options='-c statement_timeout=15min'".format(
                 dbinfo.getDBName(), dbinfo.getUser(), dbinfo.getPassword()))
             self.cur = self.con.cursor()
         except Error as e:
@@ -122,6 +122,7 @@ class Database():
 
     def RandomQ(self, Query):
         try:
+            http_logger.write("Query -- : {0}".format(Query))
             if "information_schema" in Query or "pg_" in Query:
                 return [["Bad Query"],], ("Bad Query",), False
             try:
