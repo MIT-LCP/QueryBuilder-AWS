@@ -92,4 +92,5 @@ env3/
 initial_testing.pyc
 *.pyc
 config.py
+wsgi.py
 templates/tables/*

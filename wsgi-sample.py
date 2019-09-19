@@ -1,6 +1,6 @@
 import sys
 #
-sys.path.append('/var/www/vhosts/querybuilder-lcp.mit.edu/Flask/')
+sys.path.append('/PATH/TO/Flask/')
 
 from manage import app 
 from manage import app as application

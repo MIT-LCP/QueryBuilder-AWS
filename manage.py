@@ -1,5 +1,4 @@
-#!/var/www/vhosts/querybuilder-lcp.mit.edu/python_env/bin/python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 from datetime import datetime, timedelta
 from urllib.request import HTTPBasicAuthHandler, build_opener
 from urllib.error import HTTPError
