@@ -11,18 +11,16 @@ from Postgres import *
 app = Flask(__name__)
 app.debug = True
 
-
-from urllib.error import HTTPError
-from  urllib.request import HTTPBasicAuthHandler, build_opener
 def Auth(User, Pass):
     """
     This authentication works for the current 2008-2019 physionet authentication
     version. It will NOT work for the NEW version of physionet that is being developed.
     """
-    url='https://archive.physionet.org/works/MIMICIIIClinicalDatabase/files/'
+    url='https://physionet.org/files/mimiciii/1.4/'
     auth_handler = HTTPBasicAuthHandler()
-    auth_handler.add_password(realm='PhysioNetWorks', uri=url, user=User, passwd=Pass)
+    auth_handler.add_password(realm='PhysioNet', uri=url, user=User, passwd=Pass)
     opener = build_opener(auth_handler)
+    opener.addheaders = [('User-Agent','Wget/1.18')]
     try:
         r = opener.open(url)
         return r.getcode()
