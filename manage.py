@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from urllib.request import HTTPBasicAuthHandler, build_opener
-from urllib.error import HTTPError
 from datetime import datetime
 from functools import wraps
 from os import getcwd
 from re import search
 
+from requests.auth import HTTPBasicAuth
+from requests import get, codes
 from flask import (Flask, render_template, redirect, session, request, jsonify,
                    current_app, url_for)
 
@@ -35,18 +35,20 @@ def auth(email, passwd):
     Authentication function against mimiciii
     """
     url = 'https://physionet.org/files/mimiciii/1.4/'
+    headers = {'User-Agent': 'Wget/1.18', 'Application': 'QueryBuilder'}
+    response = get(url, auth=HTTPBasicAuth(email, passwd), headers=headers)
 
-    auth_handler = HTTPBasicAuthHandler()
-    auth_handler.add_password(realm='PhysioNet', uri=url, user=email,
-                              passwd=passwd)
-    opener = build_opener(auth_handler)
-    opener.addheaders = [('User-Agent', 'Wget/1.18'),
-                         ('Application', 'QueryBuilder')]
-    try:
-        response = opener.open(url)
-        return response.getcode()
-    except HTTPError as error:
-        return error.getcode()
+    if response.status_code == codes.ok:
+        app.logger.info("User {} loggin complete".format(email))
+    elif response.status_code == codes.forbidden:
+        app.logger.info("User {} does not have access to MIMIC".format(email))
+    elif response.status_code == codes.unauthorized:
+        app.logger.info("Invalid credentials for {}".format(email))
+    else:
+        app.logger.info("Error logging in user {0}\nReason {0}\n {1}".format(
+            email, response.reason, response.status_code))
+        response.raise_for_status()
+    return response.status_code
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -74,7 +76,7 @@ def login():
                 session["Date"] = now
                 session['URL'] = "https://querybuilder-lcp.mit.edu"
                 return redirect('dashboard')
-            app.logger.error('{1}: Incorrect password or username: {0}'.format(
+            app.logger.info('{1}: Incorrect password or username: {0}'.format(
                 email, code))
             return render_template('login.html', Error='Incorrect username or password, please try again.')
         elif not valid_email(email):
@@ -164,7 +166,7 @@ def random_query():
     UserModel().record_query(session['Email'], query)
     result, title, error = data.random_query(query)
     if error:
-        app.logger.error('There was an error in the query:\n{}\n'.format(
+        app.logger.info('There was an error in the query:\n{}\n'.format(
             error))
         query_error = """<div class="card text-dark" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1;">
             <div class="card-body">
@@ -254,7 +256,7 @@ def download_random_query():
     app.logger.info('User - {0} ran this query to download:\n{1}\n'.format(
         session['Email'], query))
     if error:
-        app.logger.error('There was an error in the query:\n{}\n'.format(
+        app.logger.info('There was an error in the query:\n{}\n'.format(
             error))
         return error
     return result
